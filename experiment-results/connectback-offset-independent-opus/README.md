@@ -1,3 +1,5 @@
+**Note**: This file was generated automatically by Claude Code and has not been sanity checked.
+
 # Experiment: connectback-offset-independent-opus
 
 ## Configuration

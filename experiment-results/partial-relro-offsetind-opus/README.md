@@ -1,3 +1,5 @@
+**Note**: This file was generated automatically by Claude Code and has not been sanity checked.
+
 # Experiment: opus4.5-partial-relro-offset-independent-v2
 
 ## Configuration

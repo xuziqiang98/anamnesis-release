@@ -1,3 +1,5 @@
+**Note**: This file was generated automatically by Claude Code and has not been sanity checked.
+
 # Experiment: relro-cfi-shstk-seccomp-gpt52
 
 ## Configuration
