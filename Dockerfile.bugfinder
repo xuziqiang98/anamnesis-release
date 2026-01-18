@@ -1,0 +1,139 @@
+FROM python:3.10-slim
+
+# Install Node.js and npm for Claude Code CLI
+RUN apt-get update && apt-get install -y \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Claude Code CLI globally
+RUN npm install -g @anthropic-ai/claude-code
+RUN pip install --no-cache-dir claude-agent-sdk openai-agents
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    bash \
+    checksec \
+    coreutils \
+    cscope \
+    file \
+    gdb \
+    netcat-openbsd \
+    procps \
+    rr \
+    ruby \
+    strace \
+    uftrace \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install exploit development tools
+RUN pip install --no-cache-dir ROPGadget && \
+    gem install one_gadget
+
+# Install pwndbg for heap analysis (pinned version for reproducibility)
+RUN cd /opt && \
+    git clone --branch 2025.10.20 --depth 1 https://github.com/pwndbg/pwndbg.git && \
+    cd pwndbg && \
+    ./setup.sh
+
+# Create a non-root user for running agents
+RUN groupadd -g 1000 agent && \
+    useradd -r -u 1000 -g agent -m -d /home/agent -s /bin/bash agent
+
+# Create gdb-pwndbg wrapper script (pwndbg pollutes output with ANSI codes)
+# Use plain 'gdb' for clean batch output, 'gdb-pwndbg' for heap analysis
+RUN printf '#!/bin/bash\nexec gdb -q -x /opt/pwndbg/gdbinit.py "$@"\n' > /usr/local/bin/gdb-pwndbg && \
+    chmod +x /usr/local/bin/gdb-pwndbg
+
+# Disable pwndbg auto-update check (avoids permission issues for non-root user)
+# Set TERM=dumb to suppress ncurses errors in non-interactive batch mode
+ENV PWNDBG_NO_AUTOUPDATE=1
+ENV TERM=dumb
+
+# Create directory structure
+RUN mkdir -p /code/agents /code/evals-data /opt/evals/source /opt/evals/install /opt/evals/install-regular /opt/evals/install-relro /opt/evals/install-cfi /opt/evals/install-cet /opt/evals/install-connectback /opt/evals/tools
+
+# Copy agents
+COPY agents/claude-primitive-finder/ /code/agents/claude-primitive-finder/
+COPY agents/openai-primitive-finder/ /code/agents/openai-primitive-finder/
+
+# Copy tools and make them available
+COPY tools/ /code/tools/
+RUN chmod +x /code/tools/get_definition.py && \
+    ln -s /code/tools/get_definition.py /usr/local/bin/get_definition
+
+# Copy evaluation data
+COPY evals-data/evals-quickjs-latest/ /code/evals-data/evals-quickjs-latest/
+COPY evals-data/evals-quickjs-connectback/ /code/evals-data/evals-quickjs-connectback/
+
+# Make eval data readable and scripts executable
+RUN chmod -R a+rX /code/evals-data
+
+# Install Python dependencies
+RUN pip install --no-cache-dir pyyaml jinja2 tree-sitter tree-sitter-c
+
+# Install build tools needed for targets
+# Note: clang and lld are needed for CFI (Control Flow Integrity) builds
+RUN apt-get update && apt-get install -y \
+    git \
+    make \
+    gcc \
+    clang \
+    lld \
+    autoconf \
+    dpkg-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Download glibc source for malloc implementation reference
+# The agent can read this to understand heap allocator behavior
+RUN mkdir -p /opt/evals/source/glibc && \
+    cd /opt/evals/source/glibc && \
+    echo "deb-src http://deb.debian.org/debian bookworm main" >> /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get source glibc && \
+    rm -rf /var/lib/apt/lists/* && \
+    chmod -R a+rX /opt/evals/source/glibc
+
+# Set up work directory
+WORKDIR /code
+
+# Copy Python verification scripts
+RUN cp /code/tools/primitive-harness/shell_verify_callback.py /opt/evals/tools/ && \
+    chmod 755 /opt/evals/tools/shell_verify_callback.py
+
+# Copy offset independence checker for LLM-based verification
+RUN cp /code/tools/primitive-harness/offset_independence_checker.py /opt/evals/tools/ && \
+    chmod 755 /opt/evals/tools/offset_independence_checker.py
+
+# Build QuickJS-latest (regular, Full RELRO, CFI, and CET builds)
+RUN bash /code/evals-data/evals-quickjs-latest/get_source.sh && \
+    bash /code/evals-data/evals-quickjs-latest/install_regular.sh && \
+    bash /code/evals-data/evals-quickjs-latest/install_relro.sh && \
+    bash /code/evals-data/evals-quickjs-latest/install_cfi.sh && \
+    bash /code/evals-data/evals-quickjs-latest/install_cet.sh && \
+    cd /opt/evals/source/evals-quickjs-latest && cscope -Rb && \
+    chmod -R a-w /opt/evals/source/evals-quickjs-latest /opt/evals/install-regular/evals-quickjs-latest /opt/evals/install-relro/evals-quickjs-latest /opt/evals/install-cfi/evals-quickjs-latest /opt/evals/install-cet/evals-quickjs-latest
+RUN test -f /opt/evals/source/evals-quickjs-latest/cscope.out || \
+    (echo "Error: cscope.out not created for QuickJS-latest" && exit 1)
+
+# Build QuickJS with connectback modifications
+RUN bash /code/evals-data/evals-quickjs-connectback/get_source.sh && \
+    bash /code/evals-data/evals-quickjs-connectback/install_connectback.sh && \
+    chmod -R a-w /opt/evals/source/evals-quickjs-connectback /opt/evals/install-connectback/evals-quickjs-connectback
+
+RUN mkdir -p /tmp/work
+
+# Set work directory permissions
+RUN chown -R agent:agent /tmp/work
+
+# Switch to non-root user
+USER agent
+
+# Set working directory
+WORKDIR /tmp/work
+
+# Make all shell scripts executable
+USER root
+RUN find /code/evals-data -name "*.sh" -exec chmod +x {} \;
+USER agent

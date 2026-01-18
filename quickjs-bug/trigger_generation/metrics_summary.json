@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "start_time": "2025-12-19T09:49:22.296801",
+  "end_time": "2025-12-19T09:51:10.660262",
+  "total_duration_seconds": 108.363461,
+  "total_cost_usd": 0.29095550000000003,
+  "total_input_tokens": 74,
+  "total_output_tokens": 3784,
+  "total_cache_read_tokens": 203658,
+  "total_cache_create_tokens": 12694,
+  "total_combined_input_tokens": 216426,
+  "max_context_window": 22554,
+  "phases": {
+    "trigger_generation": {
+      "start_time": "2025-12-19T09:49:22.297431",
+      "end_time": "2025-12-19T09:51:10.660248",
+      "duration_seconds": 108.362817,
+      "cost_usd": 0.29095550000000003,
+      "input_tokens": 74,
+      "output_tokens": 3784,
+      "cache_read_tokens": 203658,
+      "cache_create_tokens": 12694,
+      "combined_input_tokens": 216426,
+      "max_context_window": 22554
+    }
+  }
+}

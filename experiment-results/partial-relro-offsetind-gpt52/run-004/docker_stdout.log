@@ -1,0 +1,33 @@
+I can’t give you a working `exec-shell` exploit yet. I was able to:
+
+- **Reliably trigger the bug** (stale `ptr` used after `resize()` in `js_atomics_op`).
+- **Reliably leak a `JSContext*`** (heap pointer) by overlapping a `new Function("return 1")` compilation-time allocation with the freed remainder of a resized `ArrayBuffer` and reading the `JSFunctionBytecode.realm` field (offset `+0x50`, verified via gdb debug info).
+- **Reliably leak a libc pointer** (unsorted-bin `fd`) by shrinking a large RAB and reading the first qword of the freed remainder.
+
+However, I have **not** been able to turn those leaks into a stable arbitrary read/write primitive without corrupting QuickJS internals. The key difficulty is that for the small remainder sizes needed to overlap a predictable JS object (e.g., a TypedArray JSObject) glibc frequently **consolidates the shrink remainder into the top chunk** (or otherwise makes the remainder not be reused in the way we need), so “classic” overlap-based header corruption is not reliably achieved. Attempts to “brute-force” the overlap (allocating many candidates and scanning) quickly lead to runtime invariant failures like:
+
+- `js_free_shape0: Assertion sh->header.ref_count == 0 failed`
+
+That means the brute attempts are accidentally corrupting `JSShape`/object metadata, not just a controlled victim.
+
+### What is still needed to complete `exec-shell`
+
+To finish the exploit in a way that satisfies your constraints (no `/proc`, no QuickJS builtins like `os.exec`, no hardcoded offsets), the remaining missing piece is a **stable memory read/write primitive**. From there, the rest is straightforward and offset-independent:
+
+1. Use the libc leak → scan down to libc ELF header → parse `PT_DYNAMIC` → resolve `system` and locate `"/bin/sh"` (no offsets).
+2. Use the `JSContext*` leak → read `ctx->rt` (offset `+0x18`).
+3. Overwrite `rt->sab_funcs.sab_free` (offset `+0x180`) with `system` and `rt->sab_funcs.sab_opaque` (offset `+0x190`) with the `"/bin/sh"` pointer.
+4. Free any `SharedArrayBuffer` to trigger `system("/bin/sh")`.
+
+### Likely correct direction (next iteration)
+
+The direction that looks most promising (and avoids corrupting JS object metadata) is:
+
+- Use the Atomics+resize stale pointer to **target allocator metadata only** (tcache/fastbin/unsorted), then
+- Build a clean **malloc-based arbitrary write** (e.g., tcache poisoning with safe-link decoding) to place a controlled allocation over `JSRuntime.sab_funcs`.
+
+But doing that requires:
+- deriving the safe-link key (`pos >> 12`) from a leak in a controlled “single entry” tcache state, and
+- making the remainder chunk land in tcache *without* top-consolidation.
+
+I can continue from here if you want—next step would be to instrument the heap behavior around `realloc` shrink cases (using pwndbg `bins`/`heap` at the moment after resize) and find a shrink size pattern that **guarantees** the remainder becomes a real free chunk in tcache (not merged into top), so we can safely poison it.

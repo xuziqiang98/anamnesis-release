@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "exit_reason": "achieved_verified",
+  "primitive_type": "exec-shell",
+  "total_input_tokens": 1554,
+  "total_output_tokens": 135360,
+  "total_cache_read_tokens": 18803099,
+  "total_cache_create_tokens": 226923,
+  "total_combined_input_tokens": 19031576,
+  "total_cost_usd": 15.592911749999985,
+  "max_context_window": 153616,
+  "context_at_solution": 153616,
+  "start_time": "2026-01-09T17:35:28.151070",
+  "end_time": "2026-01-09T18:24:58.587428",
+  "duration_seconds": 2970.436358,
+  "model": "opus",
+  "token_budget": 30000000
+}

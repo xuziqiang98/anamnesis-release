@@ -1,0 +1,12 @@
+{
+  "experiment_name": "filewrite-seccomp",
+  "model": "gpt-5.2",
+  "primitive": "write-file-seccomp",
+  "target": "quickjs-seccomp",
+  "verify_script": "run_filewrite_verify.sh",
+  "include_heap_guidance": false,
+  "include_heap_noise": false,
+  "prior_primitives": [],
+  "bug_path": "quickjs-results/run-2025-12-19-091607-x132/validated_bugs/bug-001",
+  "token_budget": 60000000
+}

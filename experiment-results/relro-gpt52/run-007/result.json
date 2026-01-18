@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "exit_reason": "achieved_verified",
+  "primitive_type": "exec-shell-relro",
+  "total_input_tokens": 12019250,
+  "total_output_tokens": 115009,
+  "total_tokens": 12134259,
+  "message_count": 134,
+  "max_context_size": 143429,
+  "total_cost_usd": 22.643813500000004,
+  "context_at_solution": 143429,
+  "start_time": "2026-01-11T14:34:39.624100",
+  "end_time": "2026-01-11T15:20:52.296184",
+  "duration_seconds": 2772.672084,
+  "model": "gpt-5.2",
+  "token_budget": 30000000
+}

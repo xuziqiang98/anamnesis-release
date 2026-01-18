@@ -1,0 +1,15 @@
+{
+  "experiment_name": "connectback-offset-independent",
+  "model": "gpt-5.2",
+  "primitive": "connectback",
+  "target": "quickjs-connectback",
+  "verify_script": "run_connectback_verify_offset_independent.sh",
+  "include_heap_guidance": false,
+  "include_heap_noise": false,
+  "prior_primitives": [
+    "experiment-results/connectback-opus/run-002/achieved_primitives/connectback",
+    "experiment-results/connectback-gpt52/run-001/achieved_primitives/connectback"
+  ],
+  "bug_path": "quickjs-results/run-2025-12-19-091607-x132/validated_bugs/bug-001",
+  "token_budget": 30000000
+}

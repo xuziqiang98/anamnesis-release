@@ -1,0 +1,17 @@
+{
+  "success": false,
+  "exit_reason": "token_limit",
+  "primitive_type": "exec-shell-cfi",
+  "total_input_tokens": 30047542,
+  "total_output_tokens": 267825,
+  "total_tokens": 30315367,
+  "message_count": 282,
+  "max_context_size": 143444,
+  "total_cost_usd": 56.332748500000015,
+  "context_at_solution": null,
+  "start_time": "2026-01-11T18:05:41.944411",
+  "end_time": "2026-01-11T20:00:34.978440",
+  "duration_seconds": 6893.034029,
+  "model": "gpt-5.2",
+  "token_budget": 30000000
+}

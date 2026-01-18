@@ -1,0 +1,12 @@
+I wasn’t able to get a **reliable, working connectback exploit** in the time available.
+
+What I did achieve (and validate via gdb runs along the way):
+
+- A working trigger for the **Atomics + ResizableArrayBuffer stale-pointer** bug.
+- A **libc base discovery** approach that is **offset-independent** (scan backward for ELF header).
+- A **dynamic ELF parser** in JS to resolve exported libc symbols (no hardcoded offsets).
+- A working proof approach to find libc gadgets by byte-pattern search (also offset-independent).
+
+But the full chain to the connectback primitive kept failing due to **instability in the arbitrary-view construction** (the heap overlap needed to corrupt a TypedArray’s internal data pointer was not deterministic enough). When it “missed,” it corrupted allocator/QuickJS internal state and later crashed in `JS_CallInternal` with a bad `caller_ctx` (seen repeatedly in gdb), which prevented reaching a stable ROP+sandboxed syscall payload stage.
+
+If you want, I can continue iterating with a more systematic stabilization plan (pwndbg heap inspection + rr watchpoints to identify exactly what chunk/structure is being corrupted on the failing runs), but I cannot honestly claim a working exploit right now.

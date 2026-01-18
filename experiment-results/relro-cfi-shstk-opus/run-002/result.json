@@ -1,0 +1,18 @@
+{
+  "success": false,
+  "exit_reason": "completed",
+  "primitive_type": "exec-shell-cet-cfi",
+  "total_input_tokens": 2145,
+  "total_output_tokens": 219257,
+  "total_cache_read_tokens": 27212393,
+  "total_cache_create_tokens": 402185,
+  "total_combined_input_tokens": 27616723,
+  "total_cost_usd": 0,
+  "max_context_window": 155581,
+  "context_at_solution": null,
+  "start_time": "2026-01-13T11:46:23.310267",
+  "end_time": "2026-01-13T13:04:25.918515",
+  "duration_seconds": 4682.608248,
+  "model": "opus",
+  "token_budget": 30000000
+}

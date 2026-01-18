@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "exit_reason": "achieved_verified",
+  "primitive_type": "exec-shell-cet-cfi",
+  "total_input_tokens": 16688603,
+  "total_output_tokens": 136453,
+  "total_cached_tokens": 12447360,
+  "total_tokens": 16825056,
+  "message_count": 184,
+  "max_context_size": 143438,
+  "total_cost_usd": 11.510805249999997,
+  "context_at_solution": 143438,
+  "start_time": "2026-01-12T21:21:03.255385",
+  "end_time": "2026-01-12T22:28:12.306596",
+  "duration_seconds": 4029.051211,
+  "model": "gpt-5.2",
+  "token_budget": 30000000
+}

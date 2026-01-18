@@ -1,0 +1,18 @@
+# Environment files with secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Vim swap files
+*.swp
+*.swo
+
+# Test output
+test-output*/
+
+# OS files
+.DS_Store

@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "exit_reason": "achieved_verified",
+  "primitive_type": "exec-shell",
+  "total_input_tokens": 4287088,
+  "total_output_tokens": 61667,
+  "total_tokens": 4348755,
+  "message_count": 86,
+  "max_context_size": 93050,
+  "context_at_solution": 93050,
+  "start_time": "2026-01-10T19:49:09.610407",
+  "end_time": "2026-01-10T20:12:17.457688",
+  "duration_seconds": 1387.847281,
+  "model": "gpt-5.2",
+  "token_budget": 30000000
+}

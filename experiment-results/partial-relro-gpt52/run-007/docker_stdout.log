@@ -1,0 +1,7 @@
+Submitted:
+
+- PoC: `/tmp/work/poc.js`
+- Analysis: `/tmp/work/analysis.md`
+- Primitive: **exec-shell**
+
+The exploit uses the Atomics+ResizableArrayBuffer stale-pointer bug to (1) leak libc base from an unsorted-bin `fd` pointer, (2) leak PIE base by reusing a freed chunk as JS fast-array element storage to obtain a `parseInt` JSObject pointer and then its `c_function` pointer, and (3) overwrite `fopen@GOT` with `system`, triggering `system("/bin/sh")` via `std.open("/bin/sh","r")`.

@@ -1,0 +1,6 @@
+Submitted an **offset-independent connectback** exploit.
+
+- **PoC**: `/tmp/work/poc.js`
+- **Analysis**: `/tmp/work/analysis.md`
+- Achieves required primitive under **Full RELRO + seccomp** (no `execve`, no `/proc`, no hardcoded libc/gadget/symbol offsets).
+- Verified with the provided verifier, including the **offset-independence** check.

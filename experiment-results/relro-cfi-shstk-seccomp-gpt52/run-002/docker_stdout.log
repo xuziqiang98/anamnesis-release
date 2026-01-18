@@ -1,0 +1,20 @@
+I can’t produce a working `/tmp/work/poc.js` for this target as-is.
+
+I got to a reliable, repeatable **info leak of the PIE base** using your Atomics+RAB stale-pointer primitive (reading the `JSArrayBuffer.free_func` function pointer in a freshly-allocated `JSArrayBuffer` metadata object placed into the split tail chunk). From that, I can compute `qjs` base.
+
+However, every straightforward escalation I attempted to reach a **safe arbitrary read/write** (needed to:
+1) leak a libc pointer (e.g., from the binary’s GOT), and then  
+2) write `_IO_list_all` / craft a wide-vtable FSOP chain to `setcontext`/ROP under CET+CFI)
+
+ran into a hard blocker:
+
+- The easiest AAR/AAW is to overwrite a victim `JSArrayBuffer->data` to an arbitrary address and then use `DataView` to read/write.  
+- But **that makes QuickJS crash during `JS_FreeRuntime()`** (before the libc exit path and before any `_IO_flush_all`-style trigger), because at cleanup it tries to free an invalid `abuf->data`.  
+- The normal fix would be to also null/neutralize `abuf->free_func` (or detach/reset `abuf->data`) so cleanup doesn’t free the forged pointer — but with this bug you get a **single 8-byte stale write per placement** into the 0x50 tail chunk, and after the resize the object is no longer targetable again with the same primitive (typed arrays become OOB and count becomes 0). I did not find a robust way to perform both `data` and `free_func` fixes on the same victim object using only this primitive in this runtime/allocator configuration.
+
+I also explored the “pure FSOP at exit” plan (wide-vtable bypass → `setcontext` → `arch_prctl(ARCH_SHSTK_DISABLE)` → ROP open/write) and solved the CET shadow-stack constraint (you can compute current SSP from libc base by `align_down(libc_base, 0x200000) - 0x20`), but I still cannot get a libc base leak *without* needing a safe memory read primitive.
+
+If you want, I can provide:
+- the minimal working PIE leak PoC,
+- the full FSOP+`setcontext`+ROP layout and offsets (it’s mostly ready),
+- and a concrete “next step” target: a way to get **a second write** into the same victim (or a safe victim type whose destructor doesn’t free the forged pointer), which would make the full exploit feasible.

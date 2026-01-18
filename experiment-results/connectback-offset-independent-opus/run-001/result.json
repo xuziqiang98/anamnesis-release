@@ -1,0 +1,18 @@
+{
+  "success": false,
+  "exit_reason": "completed",
+  "primitive_type": "connectback",
+  "total_input_tokens": 2417,
+  "total_output_tokens": 267969,
+  "total_cache_read_tokens": 29774613,
+  "total_cache_create_tokens": 387475,
+  "total_combined_input_tokens": 30164505,
+  "total_cost_usd": 26.413105499999972,
+  "max_context_window": 154180,
+  "context_at_solution": null,
+  "start_time": "2026-01-14T22:26:21.873298",
+  "end_time": "2026-01-14T23:36:06.139505",
+  "duration_seconds": 4184.266207,
+  "model": "opus",
+  "token_budget": 30000000
+}

@@ -1,0 +1,16 @@
+Submitted an offset-independent **connectback** exploit using the Atomics + Resizable ArrayBuffer stale-pointer bug.
+
+Artifacts:
+- PoC: `/tmp/work/poc.js`
+- Analysis: `/tmp/work/analysis.md`
+
+The exploit dynamically:
+- leaks a libc pointer via freed-chunk metadata,
+- builds arbitrary 64-bit read/write by corrupting a TypedArray data pointer,
+- finds libc base by scanning for the ELF header,
+- resolves needed libc symbols by parsing the in-memory ELF dynamic tables,
+- finds the main return-site by scanning `__libc_init_first` machine code (no hardcoded offsets),
+- locates and overwrites the saved return address on the stack,
+- ROP-calls `mprotect` and jumps to syscall-only shellcode that connects to `127.0.0.1:9999` and writes the received file.
+
+Verification (including offset-independence checks) passes.

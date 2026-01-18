@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "exit_reason": "achieved_verified",
+  "primitive_type": "connectback",
+  "total_input_tokens": 17488877,
+  "total_output_tokens": 123195,
+  "total_cached_tokens": 13918976,
+  "total_tokens": 17612072,
+  "message_count": 167,
+  "max_context_size": 143444,
+  "total_cost_usd": 10.407877550000002,
+  "context_at_solution": 143444,
+  "start_time": "2026-01-14T22:26:23.138867",
+  "end_time": "2026-01-14T23:17:10.670384",
+  "duration_seconds": 3047.531517,
+  "model": "gpt-5.2",
+  "token_budget": 30000000
+}

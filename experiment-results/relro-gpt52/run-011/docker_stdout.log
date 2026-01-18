@@ -1,0 +1,10 @@
+Submitted a working **exec-shell-relro** exploit.
+
+- PoC: `/tmp/work/poc.js`
+- Analysis: `/tmp/work/analysis.md`
+
+It abuses the Atomics+ResizableArrayBuffer stale-pointer bug to:
+1) leak libc via unsorted-bin `fd`,  
+2) build an arbitrary R/W primitive by corrupting a `BigInt64Array` backing pointer,  
+3) leak a stack pointer via the `__environ` GOT relocation, and  
+4) overwrite `main()`’s saved return address with a libc ROP chain that calls `execve("/bin/sh", ...)`, yielding a shell that executes stdin (verifier command).

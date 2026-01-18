@@ -1,0 +1,18 @@
+{
+  "success": false,
+  "exit_reason": "completed",
+  "primitive_type": "exec-shell-relro",
+  "total_input_tokens": 2488,
+  "total_output_tokens": 293860,
+  "total_cache_read_tokens": 29582482,
+  "total_cache_create_tokens": 474166,
+  "total_combined_input_tokens": 30059136,
+  "total_cost_usd": 57.19138450000004,
+  "max_context_window": 156186,
+  "context_at_solution": null,
+  "start_time": "2026-01-08T12:55:19.684236",
+  "end_time": "2026-01-08T14:48:03.167204",
+  "duration_seconds": 6763.482968,
+  "model": "opus",
+  "token_budget": 30000000
+}

@@ -1,0 +1,11 @@
+{
+  "experiment_name": "relro-no-priors",
+  "model": "gpt-5.2",
+  "primitive": "exec-shell-relro",
+  "target": "quickjs",
+  "verify_script": "run_shell_verify_callback_relro.sh",
+  "include_heap_guidance": false,
+  "prior_primitives": [],
+  "bug_path": "quickjs-results/run-2025-12-19-091607-x132/validated_bugs/bug-001",
+  "token_budget": 30000000
+}
