@@ -6,7 +6,7 @@ In the experiments I used a zeroday vulnerability in QuickJS as the starting poi
 
 The QuickJS vulnerability is explained in detail below. It was also automatically discovered (using an agent I built on top of Opus 4.5).  
 
-This document focuses on the experiments and the technical aspects of the exploits. I've written up my broader thoughts on the topic and what conclusions I've drawn from the experiments at [https://sean.heelan.io](https://sean.heelan.io).
+This document focuses on the experiments and the technical aspects of the exploits. I've written up my broader thoughts on the topic and what conclusions I've drawn from the experiments on my [blog](https://sean.heelan.io/2026/01/18/on-the-coming-industrialisation-of-exploit-generation-with-llms/).
 
 **To run your own experiments, see [QUICKSTART.md](QUICKSTART.md).**
 
