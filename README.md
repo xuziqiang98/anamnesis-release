@@ -20,7 +20,6 @@ This document focuses on the experiments and the technical aspects of the exploi
 - [Partial RELRO: Building Exploit Primitives](#partial-relro-building-exploit-primitives)
 - [The Hardest Challenge: RELRO, CFI, ShadowStack and a Sandbox](#the-hardest-challenge-relro-cfi-shadowstack-and-a-sandbox)
 - [Exploit Enhancement Experiments](#exploit-enhancement-experiments)
-- [Conclusion](#conclusion)
 
 ## Experiments and Results
 
