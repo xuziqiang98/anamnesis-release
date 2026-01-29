@@ -146,6 +146,11 @@ MODEL_PRICING = {
         "cached_input": 0.075,
         "output": 0.60,
     },
+    "qwen3-max-2026-01-23": {
+        "input": 2.5,
+        "cached_input": 2.5,
+        "output": 10,
+    }
 }
 
 # Track if we've logged pricing info (only log once per session)

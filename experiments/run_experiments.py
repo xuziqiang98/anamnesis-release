@@ -245,6 +245,7 @@ SUPPORTED_MODELS = {
     "claude-opus-4-5-20251101": {"provider": "anthropic", "description": "Claude Opus 4.5"},
     # OpenAI models
     "gpt-5.2": {"provider": "openai", "description": "GPT-5.2 (requires --reasoning-effort)"},
+    "qwen3-max-2026-01-23": {"provider": "openai", "description": "Qwen 3 Max (2026-01-23)"},
 }
 
 
@@ -382,6 +383,12 @@ def build_docker_command(
 
     # Environment
     cmd.extend(["-e", f"{api_key_var}={api_key}"])
+
+    # Pass through OpenAI base URL if configured (useful for proxies/compatible endpoints)
+    if use_openai:
+        openai_base_url = os.environ.get("OPENAI_BASE_URL")
+        if openai_base_url:
+            cmd.extend(["-e", f"OPENAI_BASE_URL={openai_base_url}"])
 
     # For offset-independent experiments, the checker uses Claude Agent SDK,
     # so we need ANTHROPIC_API_KEY even for OpenAI experiments

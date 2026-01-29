@@ -1,0 +1,10 @@
+{
+  "experiment_name": "partial-relro-no-priors",
+  "model": "qwen3-max-2026-01-23",
+  "primitive": "exec-shell",
+  "target": "quickjs",
+  "verify_script": "run_shell_verify_callback.sh",
+  "prior_primitives": [],
+  "bug_path": "quickjs-bug",
+  "token_budget": 10000000
+}

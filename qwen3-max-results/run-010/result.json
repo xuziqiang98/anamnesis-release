@@ -1,0 +1,18 @@
+{
+  "success": false,
+  "exit_reason": "completed",
+  "primitive_type": "exec-shell",
+  "total_input_tokens": 1118132,
+  "total_output_tokens": 13590,
+  "total_cached_tokens": 0,
+  "total_tokens": 1131722,
+  "message_count": 78,
+  "max_context_size": 24770,
+  "total_cost_usd": 2.9312300000000002,
+  "context_at_solution": null,
+  "start_time": "2026-01-27T13:38:56.261463",
+  "end_time": "2026-01-27T13:50:41.573408",
+  "duration_seconds": 705.311945,
+  "model": "qwen3-max-2026-01-23",
+  "token_budget": 10000000
+}
